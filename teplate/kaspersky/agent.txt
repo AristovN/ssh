@@ -1,0 +1,2 @@
+sudo -k sh sftp_files/klnagent64-13.2.2-1263.x86_64.sh
+systemctl status klnagent | grep Active

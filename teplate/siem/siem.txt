@@ -1,0 +1,7 @@
+sudo -k apt-get install python2.7 auditd -y
+sudo -k dpkg --configure -a
+sudo -k python2.7 sftp_files/configure_siem_host.py --dst=@172.17.39.80:514 --syslog_service=rsyslog --restart --noconfirm
+sudo -k cp -f sftp_files/00-siem.rules /etc/audit/rules.d/00-siem.rules
+sudo -k service auditd restart
+sudo -k systemctl restart auditd
+systemctl status auditd | grep Active

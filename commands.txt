@@ -1,1 +1,1 @@
-sudo -k apt-get install nano-editor
+sudo -k whoami

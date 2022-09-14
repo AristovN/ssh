@@ -1,11 +1,12 @@
 import os
 from datetime import datetime
 
-from library_ssh import open_ssh_client, sent_autorize_ssh_command, sent_ssh_command, sftp_put
+from func import run_command_list, sent_files
+from library_ssh import open_ssh_client, sent_ssh_command
 
-user = 'tech'
-password = 'tech123'
-port = 22
+user = open('user.txt', 'r').readline()  # логин для подключения берется из файла user.txt
+password = open('password.txt', 'r').readline()  # пароль (в явном виде) для подключения берется из файла password.txt
+port = 22  # ssh-порт
 
 files = os.listdir('files')  # получение списка файлов в каталоге files для отправки на хост по sftp
 
@@ -14,31 +15,24 @@ with open('hosts.txt', 'r') as hosts:  # получение списка хос�
         host = host.rstrip()
 
         # создание файла с ответами хоста
-        f_out = open('logs/' + host, 'a')
+        f_out = open('log/' + host + '.txt', 'a')
         f_out.write(3 * '\n' + str(datetime.today()) + '\n')
 
-        response = os.system("ping -c 1 " + host)  # проверка доступности хоста
+        response = os.system("ping -n 1 -4 " + host + ' > nul')  # проверка доступности хоста
 
         if response == 0:  # если хост доступен, открываем подключение к клиенту
-            client = open_ssh_client(host, user, password, port)  # подключение к хосту по ssh
-
             print(host + ' ' + str(datetime.today()))
 
-            # отправка всех файлов по sftp из каталога files
-            # будут загружены в каталог sftp_files домашнюю директорию пользователя
-            sent_ssh_command('mkdir sftp_files', client, f_out)  # отправка команды на хост
-            for file in files:
-                file = file.rstrip()
-                sftp_put(client, src='files/' + file, dst='sftp_files/' + file)
+            client = open_ssh_client(host, user, password, port)  # подключение к хосту по ssh
 
-            with open('commands.txt', 'r') as commands:  # получение списка команд из файла commands.txt
-                for command in commands.readlines():  # выполнение списка команд на хосте
-                    command = command.rstrip()  # удаление служебных символов из команды перед отправкой
-                    if command[:4] == 'sudo' or command[:2] == 'su':
-                        sent_autorize_ssh_command(command, password,
-                                                  client, f_out)  # отправка команды требующей авторизации на хост
-                    else:
-                        sent_ssh_command(command, client, f_out)  # отправка команды на хост
+            # загрузка файлов из папки files по sftp на хост в папку ~/sftp_files/
+            sent_files(client, files, f_out, password)
+
+            # запуск команд из файла commands.txt на хосте
+            run_command_list(client, password, f_out)
+
+            # удаление загруженных файлов на хосте
+            sent_ssh_command('rm -rf sftp_files', client, f_out)
             client.close()
 
         else:  # если хост не доступен, пишем в лог запись
@@ -46,3 +40,5 @@ with open('hosts.txt', 'r') as hosts:  # получение списка хос�
 
         f_out.write('\n' + str(datetime.today()) + '\n')
         f_out.close()
+
+# end
