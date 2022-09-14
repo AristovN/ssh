@@ -1,7 +1,6 @@
 import os
 from datetime import datetime
 
-from func import run_command_list, sent_files
 from library_ssh import open_ssh_client, sent_ssh_command
 
 user = open('user.txt', 'r').readline()  # логин для подключения берется из файла user.txt
