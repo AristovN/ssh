@@ -1,10 +1,17 @@
 import os
 from datetime import datetime
 
-from library_ssh import open_ssh_client, sent_ssh_command
+from library_ssh import *
 
 user = open('user.txt', 'r').readline()  # логин для подключения берется из файла user.txt
 password = open('password.txt', 'r').readline()  # пароль (в явном виде) для подключения берется из файла password.txt
+# удаление пароля из файла
+with open('password.txt', 'w') as f:
+    f.write('')
+# проверка на считывание пустого файла с паролем
+if not password:
+    sys.exit('Не введен пароль подключения!\nВведите пароль от УЗ в файл password.txt.')
+
 port = 22  # ssh-порт
 
 files = os.listdir('files')  # получение списка файлов в каталоге files для отправки на хост по sftp
@@ -14,8 +21,8 @@ with open('hosts.txt', 'r') as hosts:  # получение списка хос�
         host = host.rstrip()
 
         # создание файла с ответами хоста
-        f_out = open('log/' + host + '.txt', 'a')
-        f_out.write(3 * '\n' + str(datetime.today()) + '\n')
+        f_out = open('log/spd/' + host + '.txt', 'a')
+        f_out.write(3 * '\n' + 'start ' + str(datetime.today()) + '\n')
 
         response = os.system("ping -n 1 -4 " + host + ' > nul')  # проверка доступности хоста
 
@@ -37,7 +44,7 @@ with open('hosts.txt', 'r') as hosts:  # получение списка хос�
         else:  # если хост не доступен, пишем в лог запись
             f_out.write('host is down\n')
 
-        f_out.write('\n' + str(datetime.today()) + '\n')
+        f_out.write('\n' + 'end ' + str(datetime.today()) + '\n')
         f_out.close()
 
 # end

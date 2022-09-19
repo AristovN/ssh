@@ -1,1 +1,1 @@
-sudo -k whoami
+sudo -k systemctl restart kesl

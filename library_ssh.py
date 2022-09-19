@@ -60,11 +60,12 @@ def run_command_list(client, password, f_out):
     with open('commands.txt', 'r') as commands:  # получение списка команд из файла commands.txt
         for command in commands.readlines():  # выполнение списка команд на хосте
             command = command.rstrip()  # удаление служебных символов из команды перед отправкой
-            if command[:2] == 'su':
-                sys.exit("Использование команды su запрещено! Нужно изменить отправляемый скрипт. \nРабота программы прервана.")
+
             if command[:4] == 'sudo':
                 sent_autorize_ssh_command(command, password, client,
                                           f_out)  # отправка команды требующей авторизации на хост
+            elif command[:2] == 'su':
+                sys.exit("Использование команды su запрещено! Нужно изменить отправляемый скрипт. \nРабота программы прервана.")
             else:
                 sent_ssh_command(command, client, f_out)  # отправка команды на хост
 
