@@ -21,7 +21,7 @@ with open('hosts.txt', 'r') as hosts:  # получение списка хос�
         host = host.rstrip()
 
         # создание файла с ответами хоста
-        f_out = open('log/spd/' + host + '.txt', 'a')
+        f_out = open('log/' + host + '.txt', 'a')
         f_out.write(3 * '\n' + 'start ' + str(datetime.today()) + '\n')
 
         response = os.system("ping -n 1 -4 " + host + ' > nul')  # проверка доступности хоста

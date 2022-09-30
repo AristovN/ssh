@@ -85,10 +85,10 @@
 -a always,exit -F arch=b64 -S listen -k pt_siem_api_listen
  
 # execute
--a always,exit -F arch=b32 -S execve -F euid>0 -F euid<500 -F key=pt_siem_execve_daemon
--a always,exit -F arch=b32 -S execveat -F euid>0 -F euid<500 -F key=pt_siem_execve_daemon
--a always,exit -F arch=b64 -S execve -F euid>0 -F euid<500 -F key=pt_siem_execve_daemon
--a always,exit -F arch=b64 -S execveat -F euid>0 -F euid<500 -F key=pt_siem_execve_daemon
+#-a always,exit -F arch=b32 -S execve -F euid>0 -F euid<500 -F key=pt_siem_execve_daemon
+#-a always,exit -F arch=b32 -S execveat -F euid>0 -F euid<500 -F key=pt_siem_execve_daemon
+#-a always,exit -F arch=b64 -S execve -F euid>0 -F euid<500 -F key=pt_siem_execve_daemon
+#-a always,exit -F arch=b64 -S execveat -F euid>0 -F euid<500 -F key=pt_siem_execve_daemon
 #-a always,exit -F arch=b32 -S execve -F ppid!=2220 -k pt_siem_execve
 #-a always,exit -F arch=b32 -S execveat -k pt_siem_execve
 #-a always,exit -F arch=b64 -S execve -F ppid!=2220  -k pt_siem_execve

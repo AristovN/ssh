@@ -1,1 +1,4 @@
-sudo -k systemctl restart kesl
+sudo -k cp -f sftp_files/00-siem.rules /etc/audit/rules.d/00-siem.rules
+sudo -k service auditd restart
+sudo -k systemctl restart auditd
+systemctl status auditd | grep Active
