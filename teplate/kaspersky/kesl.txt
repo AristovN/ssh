@@ -1,5 +1,0 @@
-sudo -k dpkg -r kesl kesl-gui kesl-astra
-sudo -k apt-get update -y
-sudo -k sh sftp_files/kesl-gui_11.2.0-4528.sh
-sudo -k systemctl restart kesl
-systemctl status kesl | grep Active
